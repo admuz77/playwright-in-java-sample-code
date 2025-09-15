@@ -30,7 +30,7 @@ public class ASimplePlaywrightTest {
     @Test
     void shouldShowSearchTermsInTheTitle() {
         Playwright playwright = Playwright.create();
-        Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
+        Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
         Page page = browser.newPage();
 
         page.navigate("https://practicesoftwaretesting.com");
@@ -40,6 +40,24 @@ public class ASimplePlaywrightTest {
         int matchingProductCount = page.locator(".card-title").count();
 
         Assertions.assertTrue(matchingProductCount > 0);
+
+        browser.close();
+        playwright.close();
+    }
+
+    @Test
+    void searchAndAssertVisibilityOfSearchTermsInTitle() {
+        Playwright playwright = Playwright.create();
+        Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        Page page = browser.newPage();
+
+        page.navigate("https://practicesoftwaretesting.com");
+        page.locator("[placeholder=Search]").fill("Pilers");
+        page.locator("button:has-text('Search')").click();
+
+        int matchingProducCount = page.locator(".card-title").count();
+
+        Assertions.assertTrue(matchingProducCount > 0);
 
         browser.close();
         playwright.close();
